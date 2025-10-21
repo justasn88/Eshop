@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: lt.ju.eshop.EshopApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.843 s -- in lt.ju.eshop.EshopApplicationTests

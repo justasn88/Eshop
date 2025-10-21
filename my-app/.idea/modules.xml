@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/.idea/my-app.iml" filepath="$PROJECT_DIR$/.idea/my-app.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/eshop.iml" filepath="$PROJECT_DIR$/eshop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../my-app/my-app.iml" filepath="$PROJECT_DIR$/../my-app/my-app.iml" />
+>>>>>>> 42e4fcf4e53363e95ca89339fa4e061864d9674d
+    </modules>
+  </component>
+</project>
