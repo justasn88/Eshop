@@ -63,7 +63,7 @@ function ProductDetailsPage() {
                     <p>{product.description}</p>
                     <p>{product.price}</p>
                     <div style={{ height: '50px', display: 'flex', alignItems: 'center' }}>
-                        <AddToCartButton/>
+                        <AddToCartButton productId={productId} />
                     </div>
                 </div>
             </div>

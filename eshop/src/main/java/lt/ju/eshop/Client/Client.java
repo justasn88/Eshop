@@ -30,8 +30,7 @@ public class Client
 
     public Client () {}
 
-    public Client(Long id, String address, String email, String lastName, String name) {
-        this.id = id;
+    public Client( String address, String email, String lastName, String name) {
         this.address = address;
         this.email = email;
         this.lastName = lastName;

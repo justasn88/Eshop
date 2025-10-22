@@ -40,6 +40,7 @@ public class CartService {
             anonClient.setName("Anon");
             anonClient.setLastName("Guest");
             anonClient.setEmail("anonGuest" + System.currentTimeMillis() + "@eshop.lt");
+            anonClient.setAddress("Nenurodyta");
             anonClient = clientRepository.save(anonClient);
 
             Cart newCart = new Cart();
@@ -64,8 +65,7 @@ public class CartService {
         if (existingItem.isPresent()) {
             item = existingItem.get();
             item.setQuantity(item.getQuantity() + addToCart.getQuantity());
-        }
-        else {
+        } else {
             item = new CartItem();
             item.setQuantity(addToCart.getQuantity());
             item.setProduct(product);
@@ -73,14 +73,35 @@ public class CartService {
 
             item.setPrice(product.getPrice());
         }
-        if(item.getQuantity() <= 0) {
+        if (item.getQuantity() <= 0) {
             cartItemRepository.delete(item);
-        }
-        else {
+        } else {
             cartItemRepository.save(item);
         }
 
-        updateCartTotal(cart);
+// ⚠️ PRIVALOMAS LOGIKOS PAPILDYMAS ⚠️
+        BigDecimal currentPrice = product.getPrice();
+
+        if (currentPrice == null) {
+            // METAME KLAIDĄ: Negalime įdėti prekės be kainos į krepšelį
+            // Ši klaida grįš į Controller, kuris grąžins 500 statusą.
+            throw new IllegalStateException("Negalima pridėti prekės ID #" + addToCart.getProductId() + ". Trūksta galiojančios kainos (NULL).");
+        }
+// ...
+        if (existingItem.isPresent()) {
+            // ... atnaujiname kiekį
+            existingItem.get().setPriceAtPurchase(currentPrice); // Atnaujiname ir kainą
+            cartItemRepository.save(existingItem.get());
+        } else {
+            // ... kuriame naują
+            CartItem newItem = new CartItem();
+            // ... priskiriame Cart ir Product
+
+            // Nustatome kainą (dabar jau žinome, kad ji NĖRA NULL)
+            newItem.setPriceAtPurchase(currentPrice);
+
+            updateCartTotal(cart);
+        }
     }
 
     public void updateCartTotal(Cart cart) {
