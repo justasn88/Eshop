@@ -8,6 +8,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import CategoryButton from './components/CategoryButton';
 import HomePageButton from './components/HomePageButton';
 import CartButton from './components/CartButton';
+import Cart from "./pages/CartPage";
 
 function App() {
     return (
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/products/:categoryId" element={<ProductsPage />} />
                 <Route path="/product/:productId" element={<ProductDetailsPage />} />
+                <Route path="/cart" element={<Cart />}></Route>
             </Routes>
         </div>
     );

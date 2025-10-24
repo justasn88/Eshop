@@ -12,9 +12,12 @@ import lt.ju.eshop.Client.ClientRepo;
 import lt.ju.eshop.Product.Product;
 import lt.ju.eshop.Product.ProductRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -107,6 +110,58 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public Cart getCart(Long clientId) {
+        return cartRepository.findById(clientId).orElseThrow (() ->new RuntimeException("Krepselis nerastas"));
+    }
 
+    @Transactional
+    public void updateItemQuantity(Long itemId, int newQuantity) {
+        CartItem item = cartItemRepository.findById(itemId).orElseThrow (() ->new RuntimeException("Krepselis nerastas"));
+
+        Cart cart = item.getCart();
+        if(newQuantity <= 0) {
+            cartItemRepository.delete(item);
+        }
+        else {
+            item.setQuantity(newQuantity);
+            cartItemRepository.save(item);
+        }
+        updateCartTotal(cart);
+    }
+
+    @Transactional
+    public void removeItem(Long itemId) {
+        CartItem itemToDelete = cartItemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Krepšelio produktas nerastas."));
+        Cart cart = itemToDelete.getCart();
+        boolean removed = cart.getItems().remove(itemToDelete);
+        if (!removed) {
+            System.err.println("ĮSPĖJIMAS: CartItem nebuvo rastas Cart sąraše!");
+        }
+        cartRepository.save(cart);
+        if (cartItemRepository.existsById(itemToDelete.getId())) {
+            cartItemRepository.delete(itemToDelete);
+        }
+        updateCartTotal(cart);
+    }
+
+    public CartDTO convertToCartDTO(Cart cart) {
+        List<CartItemDTO> itemDTOs = cart.getItems().stream().map(item -> CartItemDTO.builder().
+                itemId(item.getId()).
+                productId(item.getProduct().getId()).
+                productName(item.getProduct().getName()).
+                quantity(item.getQuantity()).
+                price(item.getPrice()).
+                imageUrl(item.getProduct().getImage().orElse("/images/placeholder.png")).
+                totalPrice(item.getPrice().multiply(new BigDecimal(item.getQuantity()))).
+                build()).collect(Collectors.toList());
+
+        return CartDTO.builder().
+                clientId(cart.getId()).
+                totalPrice(cart.getTotalPrice()).
+                totalQuantity(itemDTOs.stream().mapToInt(CartItemDTO::getQuantity).sum()).
+                cartItems(itemDTOs).build();
+
+    }
 
 }

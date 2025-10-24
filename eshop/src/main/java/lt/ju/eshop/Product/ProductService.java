@@ -3,6 +3,7 @@ package lt.ju.eshop.Product;
 
 import lt.ju.eshop.Category.Category;
 import lt.ju.eshop.Category.CategoryRepo;
+import lt.ju.eshop.ProductImage.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,5 @@ public class ProductService {
         }
         return ids;
     }
-
 
 }

@@ -5,6 +5,7 @@ import lt.ju.eshop.ProductImage.ProductImage;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Product {
@@ -35,6 +36,15 @@ public class Product {
 
     public List<ProductImage> getImages() {
         return images;
+    }
+
+    public Optional<String> getImage() {
+        List<ProductImage> images = this.images;
+
+        if (images != null || !images.isEmpty()) {
+            return Optional.of(images.get(0).getPath());
+        }
+        return Optional.empty();
     }
 
     public Long getId() {
