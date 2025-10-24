@@ -79,25 +79,18 @@ public class CartService {
             cartItemRepository.save(item);
         }
 
-// ⚠️ PRIVALOMAS LOGIKOS PAPILDYMAS ⚠️
         BigDecimal currentPrice = product.getPrice();
 
         if (currentPrice == null) {
-            // METAME KLAIDĄ: Negalime įdėti prekės be kainos į krepšelį
-            // Ši klaida grįš į Controller, kuris grąžins 500 statusą.
             throw new IllegalStateException("Negalima pridėti prekės ID #" + addToCart.getProductId() + ". Trūksta galiojančios kainos (NULL).");
         }
-// ...
+
         if (existingItem.isPresent()) {
-            // ... atnaujiname kiekį
-            existingItem.get().setPriceAtPurchase(currentPrice); // Atnaujiname ir kainą
+
+            existingItem.get().setPriceAtPurchase(currentPrice);
             cartItemRepository.save(existingItem.get());
         } else {
-            // ... kuriame naują
             CartItem newItem = new CartItem();
-            // ... priskiriame Cart ir Product
-
-            // Nustatome kainą (dabar jau žinome, kad ji NĖRA NULL)
             newItem.setPriceAtPurchase(currentPrice);
 
             updateCartTotal(cart);
